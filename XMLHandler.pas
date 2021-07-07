@@ -15,8 +15,8 @@ type
       strAddress : string;
     public
       constructor Create();
-      function ImportXML(): TList<TPoint>;
-      procedure ExportXML(listPoints: TList<TPoint>);
+      function ImportXML(): TList<TList<TPoint>>;
+      procedure ExportXML(listZigzag: TList<TList<TPoint>>);
       function getCurrentAdd(): string;
       procedure setCurrentAdd(strAdd: string);
   end;
@@ -61,52 +61,77 @@ end;
 {Description: function return point list               }
 {Input: N/A                                            }
 {Return: TList<TPoint>: list of imported points        }
-function TXMLHandler.ImportXML(): TList<TPoint>;
+function TXMLHandler.ImportXML(): TList<TList<TPoint>>;
 var
   Doc: IXMLDocument;
-  nodePointList: IXMLNode;
-  listPoints: TList<TPoint>;
+  nodePoint, nodeZigzag, nodeRoot: IXMLNode;
+  listZigzag: TList<TList<TPoint>>;
+  currentZigzag: TList<TPoint>;
   Point: TPoint;
-  idx: Integer;
+  ZigZagIdx: Integer;
+  PointIdx: Integer;
 begin
+  listZigzag := TList<TList<TPoint>>.Create;
+  currentZigzag := TList<TPoint>.Create;
+  
   Doc := LoadXMLDocument(strAddress);
-  nodePointList := Doc.DocumentElement;
-
-  listPoints := TList<TPoint>.Create;
-  for idx := 0 to nodePointList.ChildNodes.Count-1 do
+  nodeRoot := Doc.DocumentElement;
+  
+  for ZigZagIdx := 0 to nodeRoot.ChildNodes.Count-1 do
     begin
-      Point.X := nodePointList.ChildNodes[idx].Attributes[CHR_XML_NODE_ATT_X];
-      Point.Y := nodePointList.ChildNodes[idx].Attributes[CHR_XML_NODE_ATT_Y];
-      listPoints.Add(Point);
-      listPoints.TrimExcess;
+      nodeZigzag := nodeRoot.ChildNodes[ZigZagIdx];
+      
+      for PointIdx := 0 to nodeZigzag.ChildNodes.Count-1 do
+      begin
+        nodePoint := nodeZigZag.ChildNodes[PointIdx];
+        
+        Point.X := nodePoint.Attributes[CHR_XML_NODE_ATT_X];
+        Point.Y := nodePoint.Attributes[CHR_XML_NODE_ATT_Y];
+
+        currentZigzag.Add(Point);
+        currentZigzag.TrimExcess;
+      end;
+
+      listZigzag.Add(currentZigzag);
+      listZigzag.TrimExcess;
+      currentZigzag := TList<TPoint>.Create;
     end;
 
-  ImportXML := listPoints;
+  ImportXML := listZigzag;
 end;
 
-{Function name: TXMLHandler.ExportXML                  }
-{Description: function export list points to XML       }
-{Input:                                                }
-{listPoints(TList<TPoint>) : point list to export      }
-{Return: N/A                                           }
-procedure TXMLHandler.ExportXML(listPoints: TList<TPoint>);
+{Function name: TXMLHandler.ExportXML                         }
+{Description: function export list points to XML              }
+{Input:                                                       }
+{listPoints(TList<TList<TPoint>>) : point list to export      }
+{Return: N/A                                                  }
+procedure TXMLHandler.ExportXML(listZigzag: TList<TList<TPoint>>);
 var
   XML : IXMLDOCUMENT;
-  RootNode, CurNode : IXMLNODE;
-  intIdx : Integer;
+  RootNode, ZigzagNode, PointNode : IXMLNODE;
+  ZigZagIdx : Integer;
+  PointIdx : Integer;
   tempPoint: TPoint;
+  tempZigzag: TList<TPoint>;
 begin
 
   XML := NewXMLDocument;
   XML.Encoding := STR_TXT_FORMAT_UTF8;
   XML.Options := [doNodeAutoIndent];
-  RootNode := XML.AddChild(STR_XML_NODE_POINTLIST);
-  for intIdx := 0 to listPoints.Count-1 do
+  RootNode := XML.AddChild(STR_XML_NODE_ZIGZAG_LIST);
+
+  for ZigZagIdx := 0 to listZigzag.Count-1 do
   begin
-    tempPoint := listPoints[intIdx];
-    CurNode := RootNode.AddChild(STR_XML_NODE_POINT);
-    CurNode.Attributes[CHR_XML_NODE_ATT_X] := tempPoint.X;
-    CurNode.Attributes[CHR_XML_NODE_ATT_Y] := tempPoint.Y;
+    tempZigzag:= listZigzag[ZigZagIdx];
+    ZigzagNode := RootNode.AddChild(STR_XML_NODE_ZIGZAG);
+
+    for PointIdx := 0 to tempZigzag.Count-1 do
+    begin
+      PointNode := ZigzagNode.AddChild(STR_XML_NODE_POINT);
+      tempPoint := tempZigzag[PointIdx];
+      PointNode.Attributes[CHR_XML_NODE_ATT_X] := tempPoint.X;
+      PointNode.Attributes[CHR_XML_NODE_ATT_Y] := tempPoint.Y;
+    end;
   end;
 
   XMl.SaveToFile(strAddress);

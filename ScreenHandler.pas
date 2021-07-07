@@ -32,10 +32,11 @@ type
     procedure OnClick(Sender: TObject);
     procedure OnDestroy(Sender: TObject);
   private
-    listPoints: TList<TPoint>;
+    listZigzag: TList<TList<TPoint>>;
+    currentZigzag: TList<TPoint>;
   public
-    function getListPoints(): TList<TPoint>;
-    procedure setListPoints(ilistPoints: TList<TPoint>);
+    function getListZigzag(): TList<TList<TPoint>>;
+    procedure setListZigzag(iListZigzag: TList<TList<TPoint>>);
     procedure Render(); overload;
     procedure Render(iPoint: TPoint); overload;
     procedure CalculateDistance();
@@ -51,24 +52,24 @@ uses
 var
   pXMLHandler: TXMLHandler;
   
-{Function name: TformMainForm.getListPoints()          }
+{Function name: TformMainForm.getListZigzag            }
 {Description: return listPoints property               }
 {Input: N/A                                            }
 {Return:                                               }
 {       TList<TPoint> : list of TPoint value           }
-function TformMainForm.getListPoints(): TList<TPoint>;
+function TformMainForm.getListZigzag(): TList<TList<TPoint>>;
 begin
-  getListPoints := listPoints;
+  getListZigzag := listZigzag;
 end;
 
-{Function name: TformMainForm.setListPoints()                    }
+{Function name: TformMainForm.setListZigzag                      }
 {Description: set listPoints property with new value             }
 {Input:                                                          }
 {ilistPoints(TList<TPoint>) : value to set for listPoints        }
 {Return: N/A                                                     }
-procedure TformMainForm.setListPoints(ilistPoints: TList<TPoint>);
+procedure TformMainForm.setListZigzag(iListZigzag: TList<TList<TPoint>>);
 begin
-  self.listPoints := ilistPoints;
+  self.listZigzag := iListZigzag;
 end;
 
 {Function name: TformMainForm.btnExportClick           }
@@ -77,12 +78,12 @@ end;
 {Return: N/A                                           }
 procedure TformMainForm.btnExportClick(Sender: TObject);
 begin
-  if (listPoints.Count < 1)
+  if (listZigzag.Count < 1)
   and (MessageDlg(STR_MSG_CONFIRM_EXPORT,
     mtConfirmation, [mbYes, mbNo], 0, mbNo) = mrNo) then
     Exit();
 
-  pXMLHandler.ExportXML(listPoints);
+  pXMLHandler.ExportXML(listZigzag);
   ShowMessage(STR_MSG_EXPORT_XML_FILE);
 end;
 
@@ -92,11 +93,17 @@ end;
 {Return: N/A                                           }
 procedure TformMainForm.btnImportClick(Sender: TObject);
 begin
+  try
+    listZigzag := pXMLHandler.ImportXML;
+    self.Render();
+  except
+    on E: exception do
+    begin
+      MessageDlg(STR_MSG_NOT_FOUND,mtError,mbOKCancel,0);
+    end;
 
-  listPoints := pXMLHandler.ImportXML;
-  labelNumOfPoint.Caption := IntToStr(listPoints.Count);
+  end;
 
-  self.Render();
 end;
 
 {Function name: TformMainForm.FormCreate               }
@@ -106,7 +113,8 @@ end;
 procedure TformMainForm.FormCreate(Sender: TObject);
 begin
   pXMLHandler := TXMLHandler.Create;
-  listPoints := TList<TPoint>.Create;
+  listZigzag := TList<TList<TPoint>>.Create;
+  currentZigzag := TList<TPoint>.Create;
 end;
 
 {Function name: TformMainForm.OnDblClick               }
@@ -117,6 +125,8 @@ procedure TformMainForm.OnDblClick(Sender: TObject);
 begin
   //TODO: Prevent OnClick to happen
   CalculateDistance;
+  listZigzag.Add(currentZigzag);
+  currentZigzag := TList<TPoint>.Create;
 end;
 
 {Function name: TformMainForm.OnDestroy                }
@@ -125,7 +135,12 @@ end;
 {Return: N/A                                           }
 procedure TformMainForm.OnDestroy(Sender: TObject);
 begin
-  listPoints.Free;
+//  for idxZigZag := 0 to listZigzag.Count-1 do
+//  begin
+//    listZigzag[idxZigZag].Free;
+//  end;
+
+  listZigzag.Free;
   pXMLHandler.Free;
 end;
 
@@ -148,7 +163,7 @@ begin
 
   self.Render(Point);
 
-  labelNumOfPoint.Caption := IntToStr(listPoints.Count);
+  labelNumOfPoint.Caption := IntToStr(currentZigzag.Count);
 end;
 
 {Function name: TformMainForm.Render                   }
@@ -159,14 +174,14 @@ end;
 procedure TformMainForm.Render(iPoint: TPoint);
 begin
   // Add point and render
-  listPoints.Add(iPoint);
-  listPoints.TrimExcess;
+  currentZigzag.Add(iPoint);
+  currentZigzag.TrimExcess;
 
   iPoint.X := iPoint.X + panelButtons.Width;
   iPoint.Y := iPoint.Y + panelDisplay.Height;
 
   //If there are more than 2 points in the Graph
-  if listPoints.Count > 1 then
+  if currentZigzag.Count > 1 then
   begin
     //Draw a line
     Canvas.LineTo( iPoint.X, iPoint.Y );
@@ -179,28 +194,36 @@ begin
 
 end;
 
-{Function name: TformMainForm.Render                   }
-{Description: function render whole point list to form }
-{Input: N/A                                            }
-{Return: N/A                                           }
+{Function name: TformMainForm.Render                    }
+{Description: function render whole zigzag list to form }
+{Input: N/A                                             }
+{Return: N/A                                            }
 procedure TformMainForm.Render();
 var
-  idx : integer;
+  PointIdx : integer;
+  ZigzagIdx : integer;
   drawPoint: TPoint;
+  drawZigzag: TList<TPoint>;
 begin
-  //Render list points
-  drawPoint := listPoints[0];
-  drawPoint.X := drawPoint.X + panelButtons.Width;
-  drawPoint.Y := drawPoint.Y + panelDisplay.Height;
-
-  Canvas.MoveTo(drawPoint.X,drawPoint.Y);
-
-  for idx := 1 to listPoints.Count-1 do
+  //Render list zigzag
+  for ZigzagIdx := 0 to listZigzag.Count-1 do
   begin
-    drawPoint := listPoints[idx];
+    drawZigzag := listZigzag[ZigzagIdx];
+
+    drawPoint := drawZigzag[0];
     drawPoint.X := drawPoint.X + panelButtons.Width;
     drawPoint.Y := drawPoint.Y + panelDisplay.Height;
-    Canvas.LineTo(drawPoint.X,drawPoint.Y);
+
+    Canvas.MoveTo(drawPoint.X, drawPoint.Y);
+
+    for PointIdx := 1 to drawZigzag.Count-1 do
+    begin
+      drawPoint := drawZigzag[PointIdx];
+      drawPoint.X := drawPoint.X + panelButtons.Width;
+      drawPoint.Y := drawPoint.Y + panelDisplay.Height;
+
+      Canvas.LineTo(drawPoint.X, drawPoint.Y);
+    end;
   end;
 end;
 
@@ -216,10 +239,10 @@ var
   XPointSq,YPointSq: integer;
 begin
   TotalDistance := 0;
-  for idx := 1 to listPoints.Count-1 do
+  for idx := 1 to currentZigzag.Count-1 do
   begin
-    XPointSq := sqr(listPoints[idx].X-listPoints[idx-1].X);
-    YPointSq := sqr(listPoints[idx].Y-listPoints[idx-1].Y);
+    XPointSq := sqr(currentZigzag[idx].X-currentZigzag[idx-1].X);
+    YPointSq := sqr(currentZigzag[idx].Y-currentZigzag[idx-1].Y);
     Distance := sqrt(XPointSq + YPointSq);
     TotalDistance := TotalDistance + Distance;
   end;
