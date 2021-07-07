@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BorlandProject>
+	<Transactions>
+    <Transaction>2021/07/02 09:34:55.000.501,=C:\Users\DatDQ6\Documents\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
+    <Transaction>2021/07/02 09:38:12.000.343,C:\Users\DatDQ6\Documents\Embarcadero\Studio\Projects\Unit1.dfm=C:\Users\DatDQ6\Documents\Embarcadero\Studio\Projects\Drawing_u.dfm</Transaction>
+    <Transaction>2021/07/02 09:38:12.000.343,C:\Users\DatDQ6\Documents\Embarcadero\Studio\Projects\Unit1.pas=C:\Users\DatDQ6\Documents\Embarcadero\Studio\Projects\Drawing_u.pas</Transaction>
+    <Transaction>2021/07/02 09:38:25.000.760,C:\Users\DatDQ6\Documents\Embarcadero\Studio\Projects\Project1.dproj=C:\Users\DatDQ6\Documents\Embarcadero\Studio\Projects\Drawing_p.dproj</Transaction>
+    <Transaction>2021/07/02 09:55:43.000.852,C:\Users\DatDQ6\Documents\Embarcadero\Studio\Projects\Drawing_u.dfm=D:\Sources\DrawingApp\Drawing_u.dfm</Transaction>
+    <Transaction>2021/07/02 09:55:43.000.852,C:\Users\DatDQ6\Documents\Embarcadero\Studio\Projects\Drawing_u.pas=D:\Sources\DrawingApp\Drawing_u.pas</Transaction>
+    <Transaction>2021/07/02 09:55:45.000.056,C:\Users\DatDQ6\Documents\Embarcadero\Studio\Projects\Drawing_p.dproj=D:\Sources\DrawingApp\Drawing_p.dproj</Transaction>
+    <Transaction>2021/07/02 23:47:37.000.361,=D:\QuocDat\Sources\Delphi\DrawingApp\Unit1.pas</Transaction>
+    <Transaction>2021/07/02 23:47:56.000.349,D:\QuocDat\Sources\Delphi\DrawingApp\Unit1.pas=D:\QuocDat\Sources\Delphi\DrawingApp\XMLHandler_u.pas</Transaction>
+    <Transaction>2021/07/03 19:50:25.000.320,D:\QuocDat\Sources\Delphi\DrawingApp\LineRender_u.pas=D:\QuocDat\Sources\Delphi\DrawingApp\Drawing_u.pas</Transaction>
+    <Transaction>2021/07/03 19:50:25.000.320,D:\QuocDat\Sources\Delphi\DrawingApp\LineRender_u.dfm=D:\QuocDat\Sources\Delphi\DrawingApp\Drawing_u.dfm</Transaction>
+    <Transaction>2021/07/03 20:08:42.000.537,D:\QuocDat\Sources\Delphi\DrawingApp\ScreenHandler.dfm=D:\QuocDat\Sources\Delphi\DrawingApp\LineRender_u.dfm</Transaction>
+    <Transaction>2021/07/03 20:08:42.000.537,D:\QuocDat\Sources\Delphi\DrawingApp\ScreenHandler.pas=D:\QuocDat\Sources\Delphi\DrawingApp\LineRender_u.pas</Transaction>
+    <Transaction>2021/07/03 20:08:49.000.206,=D:\QuocDat\Sources\Delphi\DrawingApp\Unit1.pas</Transaction>
+    <Transaction>2021/07/03 20:08:58.000.476,D:\QuocDat\Sources\Delphi\DrawingApp\LineRender.pas=D:\QuocDat\Sources\Delphi\DrawingApp\Unit1.pas</Transaction>
+    <Transaction>2021/07/03 20:13:51.000.955,D:\QuocDat\Sources\Delphi\DrawingApp\LineRender_u.pas=D:\QuocDat\Sources\Delphi\DrawingApp\LineRender.pas</Transaction>
+    <Transaction>2021/07/03 20:14:11.000.425,D:\QuocDat\Sources\Delphi\DrawingApp\LineRender.pas=D:\QuocDat\Sources\Delphi\DrawingApp\LineRender_u.pas</Transaction>
+    <Transaction>2021/07/03 20:14:17.000.049,D:\QuocDat\Sources\Delphi\DrawingApp\XMLHandler.pas=D:\QuocDat\Sources\Delphi\DrawingApp\XMLHandler_u.pas</Transaction>
+    <Transaction>2021/07/03 21:02:48.000.720,D:\QuocDat\Sources\Delphi\DrawingApp\LineDrawing.dproj=D:\QuocDat\Sources\Delphi\DrawingApp\Drawing_p.dproj</Transaction>
+    <Transaction>2021/07/05 15:18:08.000.148,D:\QuocDat\Sources\Delphi\DrawingApp\RenderingHandler.pas=D:\QuocDat\Sources\Delphi\DrawingApp\LineRender.pas</Transaction>
+    <Transaction>2021/07/05 16:18:35.000.534,=D:\QuocDat\Sources\Delphi\DrawingApp\Unit1.pas</Transaction>
+    <Transaction>2021/07/06 00:17:21.000.969,D:\QuocDat\Sources\Delphi\DrawingApp\RenderingHandler.pas=</Transaction>
+    <Transaction>2021/07/07 14:13:46.000.241,=D:\QuocDat\Sources\Delphi\DrawingApp\Unit1.pas</Transaction>
+    <Transaction>2021/07/07 14:14:02.000.440,D:\QuocDat\Sources\Delphi\DrawingApp\Unit1.pas=D:\QuocDat\Sources\Delphi\DrawingApp\User_defined.pas</Transaction>
+  </Transactions>
+	<ProjectSortOrder AutoSort="0" SortType="0">
+    <File Path="ScreenHandler.pas"/>
+    <File Path="ScreenHandler.dfm"/>
+    <File Path="XMLHandler.pas"/>
+    <File Path="User_defined.pas"/>
+  </ProjectSortOrder>
+</BorlandProject>
