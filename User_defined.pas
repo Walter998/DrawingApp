@@ -5,8 +5,6 @@ unit User_defined;
 
 interface
 
-const STR_NULL: string = '';
-const CHR_BACKSLASH: char = '\';
 const STR_XML_FILE_NAME: string = 'point_list.xml';
 const STR_TXT_FORMAT_UTF8: string = 'UTF-8';
 const STR_XML_NODE_ZIGZAG_LIST: string = 'ZigzagList';
