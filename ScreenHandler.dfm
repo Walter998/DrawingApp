@@ -1,8 +1,4 @@
 object formMainForm: TformMainForm
-  Left = 46
-  Top = 0
-  Anchors = [akLeft, akTop, akRight, akBottom]
-  Caption = 'Drawing app'
   ClientHeight = 498
   ClientWidth = 840
   Color = clBtnFace
